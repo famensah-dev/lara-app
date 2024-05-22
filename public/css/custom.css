@@ -1,0 +1,123 @@
+:root{
+    /* --color-primary-light: #f2f2ff; */
+    --color-primary-light: #f7f7ff;
+    --color-primary: #9f9fdf;
+    --color-primary-dark: #7e7ead;
+    --cs-primary: #1f1b6d;
+
+    --box-shadow-primary: rgba(0, 0, 0, 0.04) 0px 3px 5px;
+}
+
+.cs_icon{
+    font-size: 1.5rem;
+    color: var(--color-primary);
+}
+
+.cs_text-primary{
+    color: var(--color-primary-dark);
+}
+
+.cs_self-post{
+    background-color: var(--color-primary-light) !important;
+    border-radius: 1.2rem;
+    border-bottom-right-radius: 0;
+}
+
+.cs_other-post{
+    background-color: white;
+    border-radius: 1.2rem;
+    border-bottom-left-radius: 0;
+}
+
+.cs_btn{
+    border: none;
+    outline: none;
+    padding: .5rem 2rem;
+    border-radius: 6px;
+}
+
+.cs_btn-primary{
+    background-color: var(--cs-primary) !important;
+    color: white !important;
+}
+
+.cs_box-shadow{
+    box-shadow: var(--box-shadow-primary);
+}
+
+.cs_post-wrapper{
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.cs-dropdown-toggle{
+    outline: none;
+    border: none;
+    background-color: none;
+}
+
+.cs_padding{
+    padding: 1rem 1.5rem;
+}
+
+.cs_cursor-pointer{
+    cursor: pointer;
+}
+
+.cs_cursor-pointer:hover{
+    background-color: var(--color-primary-light) !important;
+    color: var(--color-primary) !important;
+}
+
+.cs_bg-primary{
+    background-color: var(--cs-primary) !important;
+}
+
+.bg-red{
+    border: 1px solid red;
+    background: red;
+}
+
+.dt-buttons{
+    width: fit-content;
+    border-radius: 0.3rem;
+    overflow: hidden;
+    display: flex;
+    gap: 0;
+}
+
+.dt-button{
+    border: none;
+    padding: .4rem .8rem;
+    font-size: .9rem;
+    background-color: var(--color-primary-dark);
+    color: white;
+}
+.dt-button:hover{
+    background-color: var(--cs-primary);
+}
+
+.dataTables_filter{
+    flex: 1;
+    display: flex;
+}
+.dataTables_filter, .dataTables_length{
+    font-size: 0;
+}
+
+.dataTables_filter label{
+    width: 100%;
+}
+.dataTables_filter label input{
+    width: 100% !important;
+}
+
+.cs_dt-top{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    /* background: var(--color-primary); */
+}
