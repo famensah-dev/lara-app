@@ -2,7 +2,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header d-flex justify-content-between">
-        <span>Edit User</span>
+        <span class="modal-title">Edit User</span>
         <i class="uil uil-multiply cs_icon" type="button" data-bs-dismiss="modal" aria-label="Close"></i>
       </div>
       <div class="modal-body">
@@ -20,13 +20,13 @@
               <input type="email" name="email" id="editUser_email" class="form-control">
               <div class="invalid-feedback" id="editUser_email_error"></div>
             </div>
-            <div class="mb-3">
+            <!-- <div class="mb-3">
               <input type="password" name="password" id="editUser_password" class="form-control" placeholder="Password">
               <div class="invalid-feedback" id="editUser_password_error"></div>
             </div>
             <div class="mb-3">
               <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm Password">
-            </div>
+            </div> -->
             <button id="updateUserBtn" type="submit" class="cs_btn cs_btn-primary">Save</button>
         </form>
       </div>

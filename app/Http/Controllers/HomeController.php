@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -24,6 +25,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home', ['posts'=> Post::with('user')->get()]);
+
+        $posts = Post::with(['user', 'attachments'])->latest()->get();
+
+        $posts->each(function ($post) {
+            $post->short_content = Str::of($post->content)->length() > 250 ? Str::limit($post->content, 250, '') . "...</div>" : $post->content;
+        });
+
+        return view('home', ['posts'=> $posts]);
     }
 }

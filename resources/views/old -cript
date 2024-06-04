@@ -24,64 +24,11 @@ function showEditPostModal(url){
             $('#editPost_title').val(data.title)
             $('#editPost_content').val(data.content)
             $('#edit_postId').val(data.id)
-            $('#edit_attachments').empty();
-            if (data.attachments && data.attachments.length > 0) {
-                data.attachments.forEach(function(attachment) {
-                    $('#edit_attachments').append(`
-                            <div class="post-file" id="attachment-${attachment.id}">
-                                <a href="/storage/${attachment.filepath}" target="_blank">${attachment.filename}</a>
-                                <!-- Button trigger modal -->
-                                <button type="button" class="remove-attachment-btn btn btn-sm btn-secondary" onclick="confirmRemoveAttachment(event, '${data.id}', '${attachment.id}')">
-                                    <i class="uil uil-trash-alt"></i>
-                                </button>
-                            </div>
-                        `);
-
-                });
-            }
         },
         error: function(){
 
         }
     })
-}
-
-function confirmRemoveAttachment(e, postId, attachmentId){
-    e.preventDefault();
-
-    if (confirm('Are you sure you want to remove this attachment? This action cannot be undone!')) {
-        removeAttachment(postId, attachmentId);
-    }
-}
-
-
-function removeAttachment(postId, attachmentId) {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        })
-
-    // const url = "{{ route('posts.attachment.remove', ['post' => ':postId', 'attachment' => ':attachmentId']) }}"
-    // .replace(':postId', postId)
-    // .replace(':attachmentId', attachmentId)
-
-    const url = `/posts/${postId}/attachments/${attachmentId}`;
-
-    $.ajax({        
-        url,
-        type: 'DELETE',
-        dataType: 'json',
-        success: function (response) {
-            console.log('Attachment removed:', attachmentId, response);
-
-            $(`#attachment-${attachmentId}`).remove();
-        },
-        error: function (response, status, error) {
-            console.error('Error removing attachment:', error); 
-            console.log('Response', response);
-        }
-    });
 }
 
 
@@ -204,7 +151,6 @@ function submitAddPostForm(url, formData, modal){
             data: formData,
             success: function(response){
                 console.log(response)
-                console.log('Hurray!')
                 modal.modal('hide')
                 reloadPage()
             },
@@ -230,42 +176,8 @@ function submitAddPostForm(url, formData, modal){
 
 
 
-function submitAddPostForm(url, formData) {
-    $.ajax({
-        url: url,
-        type: 'POST',
-        dataType: 'json',
-        data: formData,
-        contentType: false,
-        processData: false,
-        success: function(response) {
-            console.log(response);
-            $('#addPostModal').modal('hide');
-            reloadPage();
-        },
-        error: function(response) {
-            console.log(response);
-            if (response.status === 422) {
-                $('.is-invalid').removeClass('is-invalid');
-                $('.invalid-feedback').empty();
 
-                $.each(response.responseJSON.errors, function(key, value) {
-                    $('#addPost_' + key).addClass('is-invalid');
-
-                    $.each(value, function(i, message) {
-                        $('#addPost_' + key + "_error").append('<div>' + message + '</div>');
-                    });
-                });
-            } else {
-                console.log(response);
-            }
-        }
-    });
-}
-
-
-
-function submitUpdatePostForm(url, formData){    
+function submitUpdatePostForm(url, formData, modal){    
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -278,8 +190,6 @@ function submitUpdatePostForm(url, formData){
         url,
         type: 'POST',
         dataType: 'json',
-        processData: false,
-        contentType: false,
         data: formData,
         success: function(response){
             console.log(response)
