@@ -16,7 +16,7 @@
                   <input type="text" name="title" id="editPost_title" class="form-control" placeholder="Title">
                   <div class="invalid-feedback" id="editPost_title_error"></div>
                 </div>
-                <div class="mb-3" id="edit_attachments"></div>
+                <!-- <div class="mb-3" id="edit_attachments"></div> -->
                 <input id="x-edit" type="hidden" name="content">
                 <trix-editor id="editPost_content" input="x-edit" class="form-control trix-content"></trix-editor>
             </div>

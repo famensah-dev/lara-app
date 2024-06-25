@@ -23,12 +23,11 @@ Route::middleware(['auth', 'verified'])->group(function(){
     Route::resource('users', UserController::class)->except(['create', 'update', 'edit', 'destroy']);
     Route::resource('posts', PostController::class)->except(['create', 'update', 'edit', 'destroy']);
     Route::get('posts/{post}/view', [PostController::class, 'viewPost'])->name('posts.viewPost');
-    Route::post('posts/attachments/upload', [PostController::class, 'uploadAttachments'])->name('posts.attachments.upload');
-    Route::delete('/posts/{post}/attachments/{attachment}', [PostController::class, 'deleteAttachment'])->name('posts.attachment.remove');
-    Route::post('/upload-image', [PostController::class, 'uploadImage']);
+    Route::post('/attachment', [PostController::class, 'uploadAttachment'])->name('post.attachment.upload');
+    Route::delete('/attachment/{attachment}', [PostController::class, 'removeAttachment'])->name('post.attachment.remove');
 
 
-    // Route::view('users/edit-password', 'users.edit-password')->name('users.password.edit');
+
     Route::get('users/{user}/roles', [UserController::class, 'getRoles'])->name('users.getUserRoles');
     Route::put('users/update-role', [UserController::class, 'updateUserRoles'])->name('users.updateUserRoles');
     Route::put('users/update-password', [UserController::class, 'updateUserPassword'])->name('users.updateUserPassword');

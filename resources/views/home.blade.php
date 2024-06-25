@@ -20,6 +20,31 @@
     </div>
 
     <section class="container d-flex flex-column align-items-center">
+        <div class="container">
+            <form id="addPostForm" method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
+                @csrf
+                <div class="mb-3">
+                    <input type="text" name="title" class="form-control @error('title') is-invalid @enderror"" id="addPost_title" class="form-control" placeholder="Enter Title">
+                    @error('title')
+                        <div class="invalid-feedback" id="addPost_title_error">
+                            {{$message}}
+                        </div>
+                    @enderror
+                </div>
+                <div class="mb-3">
+                    @error('content')
+                        <div class="invalid-feedback" id="addPost_title_error">
+                            {{$message}}
+                        </div>
+                    @enderror
+                    <input id="addPost_content" type="hidden" name="content">
+                    <input type="hidden" name="imageIds" id="imageIds">
+                    <trix-editor input="addPost_content" class="@error('content') is-invalid @enderror form-control trix-content" rows="3" data-scrollbar></trix-editor>
+                </div>
+                <button type="submit" class="cs_btn cs_btn-primary">Create Post</button>
+            </form>
+        </div>
+
         <div class="d-flex flex-column gap-4 bg-white cs_padding">
             <div class="mt-8 cs_post-wrapper" data-scrollbar>
                 @forelse ($posts as $post)
@@ -40,6 +65,7 @@
                                 <div class="dropdown cs_dropdown">
                                     <i type="button" class="uil uil-ellipsis-v cs_icon" data-bs-toggle="dropdown" aria-expanded="false"></i>
                                     <ul class="dropdown-menu">
+                                        <li class="dropdown-item cs_hover-pointer"><a href="{{route('posts.viewPost', ['post' => $post->id])}}">View</a></li>
                                         <li data-post-id="{{ $post->id }}" class="editPostBtn dropdown-item cs_hover-pointer" data-bs-toggle="modal" data-bs-target="#editPostModal">Edit</li>
                                         <li data-post-id="{{ $post->id }}" class="deletePostBtn dropdown-item cs_hover-pointer" data-bs-toggle="modal" data-bs-target="#deletePostModal">Delete</li>
                                     </ul>
@@ -50,34 +76,9 @@
                             <!-- Display Post -->
                             <p class="post-title main">Caption: {{ $post->title }}</p>
 
-                            @if ($post->attachments->count() > 0)
-                            <div class="post-images">
-                                @foreach($post->attachments as $attachment)
-                                    @if (Str::startsWith($attachment->filetype, 'image/'))
-                                    <div class="post-image">
-                                        <img src="{{ asset('storage/' . $attachment->filepath) }}" alt="{{ $attachment->filename }}">
-                                    </div>
-                                    @endif
-                                @endforeach
+                            <div class="trix-content fixed-height d-flex flex-column" data-scrollbar>
+                                {!! $post->content !!}
                             </div>
-                            @endif
-                            <div class="trix-content fixed-height d-flex flex-column">
-                                {!! $post->short_content !!}
-                                <!-- {!!  $post->content !!} -->
-                                @if (strlen($post->content) > 250)
-                                <span class="read-more"><a href="{{route('posts.viewPost', ['post' => $post->id])}}">Read More</a></span>
-                                @endif
-                            </div>
-                            @if ($post->attachments->count() > 0 && !Str::startsWith($attachment->filetype, 'image/'))
-                            <p class="post-title">Attachments</p>
-                            <ul class="cs_ul">
-                                @foreach ($post->attachments as $attachment)
-                                    <li>
-                                        <a href="{{ asset('storage/' . $attachment->filepath) }}" target="_blank">{{ $attachment->filename }}</a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                            @endif
                         </div>
                     </div>
                     @empty
@@ -88,39 +89,6 @@
                     </div>
                 @endforelse
             </div>
-
-            <div class="d-flex justify-content-center">
-                <button type="button" class="cs_btn cs_btn-primary rounded-full mt-2" data-bs-toggle="modal" data-bs-target="#addPostModal">Add New</button>
-            </div>
-
-           
-
-            
-            <!-- Add New Post Modal -->
-            <div class="modal fade" id="addPostModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addPostModal" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header d-flex justify-content-between">
-                            <span>Add New Post</span>
-                            <i class="uil uil-multiply cs_icon" type="button" data-bs-dismiss="modal" aria-label="Close"></i>
-                        </div>
-                        <div class="modal-body">
-                        <form id="addPostForm" method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
-                            @csrf
-                            <div class="mb-3">
-                                <input type="text" name="title" id="addPost_title" class="form-control" placeholder="Enter Title">
-                                <div class="invalid-feedback" id="addPost_title_error"></div>
-                            </div>
-                            <div class="mb-3">
-                                <input id="addPost_content" type="hidden" name="content">
-                                <trix-editor input="addPost_content" class="form-control trix-content" rows="3"></trix-editor>
-                            </div>
-                            <button type="submit" class="cs_btn cs_btn-primary">Create Post</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>                            
         </div>
     </section>
 
@@ -131,170 +99,8 @@
 <script src="{{ asset('js/script.js') }}" defer></script>
 <script defer>
     document.addEventListener('DOMContentLoaded', function() {
-        let attachments = [];
 
-        // document.addEventListener('trix-attachment-add', function(event) {
-        //     if (event.attachment.file) {
-        //         // console.log(event.attachment.file.type)
-        //         attachments.push(event.attachment);
-        //     }
-        // });
-
-        // document.addEventListener('trix-file-accept', function(event) {
-        //     // event.preventDefault()
-        //     console.log(event.file)
-        //     // if (event.attachment.file) {
-        //     //     console.log(event.attachment.file)
-        //     //     attachments.push(event.attachment);
-        //     // }
-        // });
-
-        // document.addEventListener('trix-change', function(event) {
-        //     const editor = event.target;
-        //     const images = editor.querySelectorAll("img");
-            
-        //     images.forEach(image => {
-        //         if (!image.getAttribute('data-uploaded')) {
-        //             uploadImage(image);
-        //         }
-        //     });
-        // });
-
-        // const insertedImages = [];
-
-        let trixEditor = document.querySelector("trix-editor")
-
-        // document.addEventListener('trix-file-accept', function(event){
-        //     event.preventDefault()
-        //     trixEditor.editor.insertString("Hello")
-        // })
-        
-        document.addEventListener('trix-attachment-add', function(event) {
-
-            const file = event.attachment.file;
-            if (file && file.type.startsWith('image/')) {
-                console.log(file);
-                console.log(trixEditor.editor);
-                // trixEditor.editor.insertHTML("<strong>Hello</strong>")
-                //upload file
-
-                //insert img tag in trix editor at that position
-                
-            } else {
-                attachments.push(file);
-                console.log(attachments)
-            }
-        });
-
-
-
-            // function uploadImage(image) {
-            //     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            //     const file = image.file;
-            //     const formData = new FormData();
-            //     formData.append('file', file);
-            //     formData.append('_token', csrfToken);
-
-            //     const xhr = new XMLHttpRequest();
-            //     xhr.open('POST', '/upload-image', true);
-            //     xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-            //     xhr.responseType = 'json';
-
-            //     xhr.onload = function() {
-            //         if (xhr.status === 200) {
-            //             const response = xhr.response;
-            //             image.setAttribute('src', response.url);
-            //             image.setAttribute('data-uploaded', 'true');
-            //         } else {
-            //             console.error('Image upload failed');
-            //         }
-            //     };
-
-            //     xhr.send(formData);
-            // }
-        // function uploadFile(attachment, postId) {
-        //     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        //     const file = attachment.file;
-        //     const formData = new FormData();
-            
-        //     // Generate custom filename
-        //     const customFilename = `${postId}_${Date.now()}.${file.name.split('.').pop()}`;
-            
-        //     formData.append('file', file, customFilename);
-        //     formData.append('_token', csrfToken);
-        //     formData.append('postId', postId);
-
-        //     const xhr = new XMLHttpRequest();
-        //     xhr.open('POST', '/posts/attachments/upload', true);
-        //     xhr.responseType = 'json';
-
-        //     xhr.upload.addEventListener('progress', function(event) {
-        //         const progress = (event.loaded / event.total) * 100;
-        //         attachment.setUploadProgress(progress);
-        //     });
-
-        //     xhr.onload = function() {
-        //         if (xhr.status === 200) {
-        //             const response = xhr.response;
-        //             attachment.setAttributes({
-        //                 url: response.url,
-        //                 href: response.url
-        //             });
-        //         } else {
-        //             attachment.remove();
-        //         }
-        //     };
-
-        //     xhr.send(formData);
-        // }
-
-        const addPostForm = document.querySelector('#addPostForm');
-        
-        addPostForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formUrl = this.getAttribute('action'); 
-            const formData = new FormData(this);
-
-            attachments.forEach((attachment, index) => {
-                formData.append('attachments[]', attachment.file);
-            });
-
-            submitAddPostForm(formUrl, formData);
-        });
-
-
-        // function submitAddPostForm(url, formData) {
-        //     $.ajax({
-        //         url: url,
-        //         type: 'POST',
-        //         dataType: 'json',
-        //         data: formData,
-        //         contentType: false,
-        //         processData: false,
-        //         success: function(response) {
-        //             console.log(response);
-        //             $('#addPostModal').modal('hide');
-        //             reloadPage();
-        //         },
-        //         error: function(response) {
-        //             console.log(response);
-        //             if (response.status === 422) {
-        //                 $('.is-invalid').removeClass('is-invalid');
-        //                 $('.invalid-feedback').empty();
-
-        //                 $.each(response.responseJSON.errors, function(key, value) {
-        //                     $('#addPost_' + key).addClass('is-invalid');
-
-        //                     $.each(value, function(i, message) {
-        //                         $('#addPost_' + key + "_error").append('<div>' + message + '</div>');
-        //                     });
-        //                 });
-        //             } else {
-        //                 console.log(response);
-        //             }
-        //         }
-        //     });
-        // }
+        let imageIds = []
 
         $('.editPostBtn').on('click', function() {
             const postId = $(this).data('post-id');
@@ -309,12 +115,6 @@
             e.preventDefault();
             const formUrl = "{{ route('posts.update') }}";
             const formData = new FormData(this);
-
-            attachments.forEach((attachment, index) => {
-                formData.append('attachments[]', attachment.file);
-            });
-
-            console.log(formData)
             submitUpdatePostForm(formUrl, formData);
         });
 
@@ -323,6 +123,121 @@
             const postId = $(this).data('post-id');
             $('#deletePostId').val(postId);
         });
+
+
+
+        (function() {
+            var HOST = "{{ route('post.attachment.upload') }}"
+
+            addEventListener("trix-attachment-add", function(event) {
+                if (event.attachment.file) {
+                    uploadFileAttachment(event.attachment)
+                }
+            })
+
+            function uploadFileAttachment(attachment) {
+                uploadFile(attachment.file, setProgress, setAttributes)
+
+                function setProgress(progress) {
+                    attachment.setUploadProgress(progress)
+                }
+
+                function setAttributes(attributes) {
+                    attachment.setAttributes(attributes)
+                }
+            }
+
+            function uploadFile(file, progressCallback, successCallback) {
+                var key = createStorageKey(file)
+                var formData = createFormData(key, file)
+                var xhr = new XMLHttpRequest()
+
+                const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                formData.append('_token', csrfToken);
+
+                xhr.open("POST", HOST, true)
+
+                xhr.upload.addEventListener("progress", function(event) {
+                    var progress = event.loaded / event.total * 100
+                    progressCallback(progress)
+                })
+
+                xhr.addEventListener("load", function(event) {
+                    const responseObject = JSON.parse(xhr.responseText)
+
+                    if (xhr.status == 200) {
+                        var attributes = {
+                            url: responseObject.url,
+                            href: responseObject.url + "?content-disposition=attachment",
+                            attachmentId: responseObject.id
+                        }
+
+                        imageIds.push(responseObject.id)
+
+                        let attachmentIds = document.querySelector('#imageIds')
+                        attachmentIds.value = imageIds
+
+                        console.log(imageIds)
+
+                        successCallback(attributes)
+                    }
+                })
+
+                xhr.send(formData)
+            }
+
+            function createStorageKey(file) {
+                var date = new Date()
+                var day = date.toISOString().slice(0,10)
+                var name = date.getTime() + "-" + file.name
+                return [ "tmp", day, name ].join("/")
+            }
+
+            function createFormData(key, file) {
+                var data = new FormData()
+                data.append("key", key)
+                data.append("Content-Type", file.type)
+                data.append("file", file)
+                return data
+            }
+        })();
+
+
+
+    document.addEventListener('trix-attachment-remove', function(event){
+        const attachment = event.attachment
+        const attachmentId = attachment.attachment.attributes.values['attachmentId']
+        const url = "{{ route('post.attachment.remove', ['attachment' => ':attachmentId']) }}".replace(':attachmentId', attachmentId)
+
+        if (confirm('Are you sure you want to remove this attachment? This action cannot be undone!')) {
+            removeAttachment(url)
+        }
+    });
+
+
+
+
+    function removeAttachment(url){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            })
+
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                success: function(response) {
+                    console.log('File successfully deleted');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error deleting file:', error);
+                }
+            });
+                console.log(attachmentId)
+    }
+
     });
 </script>
 @endpush

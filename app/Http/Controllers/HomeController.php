@@ -28,10 +28,11 @@ class HomeController extends Controller
 
         $posts = Post::with(['user', 'attachments'])->latest()->get();
 
-        $posts->each(function ($post) {
-            $post->short_content = Str::of($post->content)->length() > 250 ? Str::limit($post->content, 250, '') . "...</div>" : $post->content;
-        });
+        // $posts->each(function ($post) {
+        //     $post->short_content = Str::of($post->content)->length() > 250 ? Str::limit($post->content, 250, '') . "...</div>" : $post->content;
+        // });
 
         return view('home', ['posts'=> $posts]);
+
     }
 }

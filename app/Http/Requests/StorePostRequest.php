@@ -24,7 +24,7 @@ class StorePostRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx',
+            // 'attachments.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx',
         ];
     }
 }

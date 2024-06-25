@@ -164,7 +164,7 @@ function submitAddUserForm(url, formData, modal){
             success: function(response){
                 console.log(response)
                 modal.modal('hide')
-                reloadPage()
+                // reloadPage()
             },
             error: function(response){
                 if (response.status === 422) { 

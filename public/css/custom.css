@@ -28,7 +28,7 @@
 
 .trix-content.fixed-height{
     max-height: 250px;
-    overflow-y: auto; 
+    overflow-y: scroll; 
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
@@ -138,8 +138,8 @@
 
 @media (max-width: 768px) {
     .post-image {
-        flex: 1 1 100%; /* Each image takes full width on smaller screens */
-        height: auto; /* Adjust height as needed */
+        flex: 1 1 100%;
+        height: auto;
     }
 }
 
@@ -189,9 +189,6 @@
 
 .cs_other-post .post-title{
     border-left: 5px solid var(--cs-primary-light);
-    /* background-color: white;
-    border-radius: 1.2rem;
-    border-bottom-left-radius: 0; */
 }
 
 .rounded-md{
@@ -199,8 +196,9 @@
 }
 
 .read-more a, .read-less a{
-    color: var(--cs-primary);
+    color: var(--cs-primary) !important;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .read-more:hover{
@@ -253,19 +251,24 @@
     border: none;
 }
 
-.cs_dropdown .dropdown-menu li{
+.cs_dropdown .dropdown-menu li,
+.cs_dropdown .dropdown-menu li a{
     padding-top: .8rem;
     font-size: .9rem;
+    text-decoration: none;
+    color: inherit !important;
 }
 
 .cs_dropdown ul li:hover{
     background-color: var(--cs-primary-lighter);
     color: var(--cs-primary);
+    border-left: 3px solid var(--cs-primary);
 }
 
 .cs_dropdown ul .deleteUserBtn:hover{
     background-color: var(--cs-danger);
-    color: white;
+    color: white !important;
+    border-left: 3px solid var(--cs-danger-dark);
 }
 
 .dropdown-menu i{
@@ -403,4 +406,8 @@
     align-items: center;
     padding: 1rem 0;
     gap: .2rem;
+}
+
+.dataTables_scrollBody{ 
+    min-height: 50vh !important;
 }

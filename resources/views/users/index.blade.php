@@ -112,10 +112,10 @@
             ]
         });
 
-        $('#editRoleUser_roles').select2({
-            placeholder: 'Select roles',
-            width: '100%'
-        });
+        // $('#editRoleUser_roles').select2({
+        //     placeholder: 'Select roles',
+        //     width: '100%'
+        // });
 
 
         $('#users-table').on('click', '.editUserBtn', function(){
