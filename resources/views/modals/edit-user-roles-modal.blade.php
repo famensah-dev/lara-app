@@ -19,11 +19,12 @@
               <input type="email" name="email" id="editRoleUser_email" class="form-control" disabled>
             </div>
             <div class="mb-3">
-              <select id="editRoleUser_roles" name="roles[]" multiple="multiple" style="width: 100%;"></select>
+              <select id="editRoleUser_roles" class="form-control" name="roles[]" multiple="multiple" style="width: 100%;">
+                @foreach($roles as $role)
+                <option value="{{$role->id}}">{{$role->name}}</option>
+                @endforeach  
+              </select>
               <div class="invalid-feedback" id="editRoleUser_password_error"></div>
-            </div>
-            <div class="mb-3">
-              <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm Password">
             </div>
             <button id="updateUserRoleBtn" type="submit" class="cs_btn cs_btn-primary">Save</button>
             <button type="button" data-bs-dismiss="modal" aria-label="Close" class="btn btn-light">Cancel</button>

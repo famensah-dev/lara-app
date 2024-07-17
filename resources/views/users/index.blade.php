@@ -112,30 +112,34 @@
             ]
         });
 
-        // $('#editRoleUser_roles').select2({
-        //     placeholder: 'Select roles',
-        //     width: '100%'
-        // });
+        $('#editRoleUser_roles').select2({
+            placeholder: 'Select Roles',
+            allowClear: true,
+            tags: true,
+            tokenSeparators: [',', ' '],
+            dropdownParent: $('#editUserRolesModal'),
+            width: '100%'
+        });
 
 
         $('#users-table').on('click', '.editUserBtn', function(){
             const userId = $(this).data('user-id');
             const url = "{{ route('users.show', ':userId') }}".replace(':userId', userId);
-            console.log(url)
+            // console.log(url)
             showEditUserModal(url);
         });
 
         $('#users-table').on('click', '.editUserPasswordBtn', function(){
             const userId = $(this).data('user-id');
             const url = "{{ route('users.show', ':userId') }}".replace(':userId', userId);
-            console.log(url)
+            // console.log(url)
             showEditUserPasswordModal(url);
         });
 
         $('#users-table').on('click', '.editUserRoleBtn', function(){
             const userId = $(this).data('user-id');
             const url = "{{ route('users.getUserRoles', ':userId') }}".replace(':userId', userId);
-            console.log(url)
+            // console.log(url)
             showEditUserRolesModal(url);
         });
 
@@ -160,7 +164,7 @@
             e.preventDefault();
             const formUrl = "{{ route('users.update') }}";
             const formData = $(this).serialize();
-            console.log(formData, formUrl)
+            // console.log(formData, formUrl)
 
             submitUpdateUserForm(formUrl, formData, $('#editUserModal'));
         });
@@ -182,7 +186,7 @@
             // const formUrl = $(this).attr('action');
             const formUrl = "{{ route('users.updateUserRoles') }}";
             const formData = $(this).serialize();
-            console.log(formData, formUrl)
+            // console.log(formData, formUrl)
 
             submitUpdateUserRoleForm(formUrl, formData, $('#editUserRoleModal'));
         });

@@ -17,6 +17,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $this->authorize('viewAny', User::class);
+        $roles = Role::all();
 
         if ($request->ajax()) {
 
@@ -45,7 +46,7 @@ class UserController extends Controller
                     ->rawColumns(['action'])
                     ->make(true);
         }
-        return view('users.index');
+        return view('users.index', compact('roles'));
     }
 
 

@@ -411,3 +411,8 @@
 .dataTables_scrollBody{ 
     min-height: 50vh !important;
 }
+
+.select2-selection__choice{
+    display: flex;
+    flex-direction: row-reverse;
+}

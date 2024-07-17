@@ -20,7 +20,7 @@ function showEditPostModal(url){
         type: 'GET',
         dataType: 'json',
         success: function(data){
-            console.log(data)
+            // console.log(data)
             $('#editPost_title').val(data.title)
             $('#editPost_content').val(data.content)
             $('#edit_postId').val(data.id)
@@ -96,7 +96,7 @@ function showEditUserModal(url){
             $('#editUser_email').val(data.email)
             $('#editUser_password').val(data.password)
             $('#editUserModal').modal('show')
-            console.log(data)
+            // console.log(data)
         },
         error: function(){
 
@@ -116,7 +116,7 @@ function showEditUserPasswordModal(url){
             $('#editPasswordUser_email').val(data.email)
             $('#editPasswordUser_password').val(data.password)
             $('#editUserPasswordModal').modal('show')
-            console.log(data)
+            // console.log(data)
         },
         error: function(){
 
@@ -131,13 +131,18 @@ function showEditUserRolesModal(url){
         type: 'GET',
         dataType: 'json',
         success: function(data){
-            console.log(data)
+            // console.log(data)
             $('#editRoleUser_id').val(data.id)
             $('#editRoleUser_name').val(data.name)
             $('#editRoleUser_email').val(data.email)
             $('#editRoleUser_password').val(data.password)
             $('#editUserRolesModal').modal('show')
-            console.log(data)
+
+            // Set selected roles
+            const assignedRoles = data.roles.map(role => role.id); // Adjust according to your data structure
+            $('#editRoleUser_roles').val(assignedRoles).trigger('change'); // Set selected roles in Select2
+
+            // console.log(data)
         },
         error: function(response){
             alert('An error occurred. Please try again.');
@@ -154,7 +159,7 @@ function submitAddUserForm(url, formData, modal){
             }
         })
 
-        console.log(url, formData);
+        // console.log(url, formData);
         
         $.ajax({
             url,
@@ -162,7 +167,7 @@ function submitAddUserForm(url, formData, modal){
             dataType: 'json',
             data: formData,
             success: function(response){
-                console.log(response)
+                // console.log(response)
                 modal.modal('hide')
                 // reloadPage()
             },
@@ -391,7 +396,34 @@ function populateRoles(roles, userRoles) {
 }
 
 
+function submitUpdateUserRoleForm(url, formData, modal){    
+    $.ajax({
+        url,
+        type: 'POST',
+        dataType: 'json',
+        data: formData,
+        success: function(response){
+            modal.modal('hide')
+            reloadPage()
+        },
+        error: function(response){
+            if (response.status === 422) { 
+                $('.is-invalid').removeClass('is-invalid');
+                $('.invalid-feedback').empty();
 
+                $.each(response.responseJSON.errors, function(key, value) {
+                    $('#editPasswordUser_' + key).addClass('is-invalid');
+
+                    $.each(value, function(i, message) {
+                        $('#editPasswordUser_' + key + '_error').append('<div>' + message + '</div>');
+                    });
+                });
+            }else{
+                console.log(response)
+            }
+        }
+    })
+}
 
 
 
